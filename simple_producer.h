@@ -7,9 +7,9 @@
  *               INPUT:     encrypted_message,input_secret_key
  *               OUTPUT     decrypted_message
  */
-char *one_time_pad_encryption(char *plaintext, char *secret_key);
+char *one_time_pad_encryption(char *plaintext, const char *secret_key);
 
-char *one_time_pad_decryption(char *encrypted_message, char *secret_key);
+char *one_time_pad_decryption(char *encrypted_message, const char *secret_key);
 
 /**
  * INFO: Caesar's Cipher (It reads an input plaintext and a positive key)
@@ -23,7 +23,13 @@ char *one_time_pad_decryption(char *encrypted_message, char *secret_key);
  */
 char *ceasar_cipher_encryption(char *plainText, int key);
 
-char *ceasar_cipher_decryption(char *plainText, int key);
+char *ceasar_cipher_decryption(char *encrypted_message, int key);
+
+char *vigenere_cipher_encryption(char *plainText, char * key);
+
+char *vigenere_cipher_decryption(char *encrypted_message, char * key);
+
+void Vigenere_Cipher();
 
 static char AlphabetWithDigits[62][1] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F",
                                          "G", "H", "I", "J", "K", "L", "M",

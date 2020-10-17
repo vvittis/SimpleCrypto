@@ -5,7 +5,7 @@
 #include "simple_producer.h"
 
 
-char *one_time_pad_encryption(char *plaintext, char *secret_key) {
+char *one_time_pad_encryption(char *plaintext, const char *secret_key) {
     static char *crypto;
     crypto = malloc(strlen(plaintext) * sizeof(char));
     int i;
@@ -29,10 +29,11 @@ char *one_time_pad_encryption(char *plaintext, char *secret_key) {
 
 }
 
-char *one_time_pad_decryption(char *crypto, char *secret_key) {
+char *one_time_pad_decryption(char *crypto, const char *secret_key) {
     int i;
     static char *decrypted_message;
     decrypted_message = malloc(strlen(crypto) * sizeof(char));
+
     for (i = 0; i < strlen(crypto); i++) {
         decrypted_message[i] = crypto[i] ^ secret_key[i];
     }
@@ -88,7 +89,6 @@ char *ceasar_cipher_encryption(char *plainText, int key) {
 
 }
 
-
 char *ceasar_cipher_decryption(char *plainText, int key) {
     //Decryption
     static char *cipher;
@@ -121,4 +121,96 @@ char *ceasar_cipher_decryption(char *plainText, int key) {
         printf("%c", cipher[i]);
     }
     return cipher;
+}
+
+void generateKey(char *str, char *key) {
+
+    int x = strlen(str);
+    int y = strlen(key);
+
+    int j = 0;
+    char value[strlen(str)];
+    for (int i = 0; i < x; i++) {
+
+        if (i >= y) {
+
+            key[i] = key[j];
+
+            j++;
+            if (j == y) {
+                j = 0;
+            }
+        } else {
+
+            key[i] = key[i];
+        }
+        // printf("%c ",value[i] );
+    }
+    // printf("KEY: %s\n",key );
+}
+
+
+
+
+void Vigenere_Cipher() {
+
+    char key[101];//Assign the key
+    char plainText[101]; //Declare a string for a users text to encrypt
+
+    //Ask the user for a sentence or word to encrypt
+    printf("[Vigenere]: input: ");
+
+    scanf("%s", plainText);
+    printf("[Vigenere] key: ");
+
+    scanf("%s", key);
+
+    generateKey(plainText, key);
+    printf("[Vigenere] key1: %s\n", key);
+    //print the encrypted plain text
+    printf("[Vigenere] encrypted: ");
+
+    int i;
+    char cipher[strlen(plainText)];
+    int cipherValue;
+    int len = strlen(key);
+
+    //Loop through the length of the plain text string
+    for (i = 0; i < strlen(plainText); i++) {
+
+        //if the character is lowercase, where range is [97 -122]
+        cipherValue = ((int) plainText[i] - 65 + (int) toupper(key[i % len]) - 65) % 26 + 65;
+        cipher[i] = (char) cipherValue;
+        printf("%c",cipher[i]);
+
+    }
+    printf("\n");
+    printf("[Vigenere] decrypted: ");
+    char de;
+    int decipherValue;
+    cipher[i] = '\0';
+    //Loop through the length of the plain text string
+    for (i = 0; i < strlen(cipher); i++) {
+        //if the character is lowercase, where range is [97 -122]
+        if (islower(cipher[i])) {
+            decipherValue = (((int) cipher[i] - 97) - ((int) tolower(key[i % len]) - 97) + 26) % 26 + 97;
+            de = (char) decipherValue;
+
+        } else // Else it's upper case, where letter range is [65 - 90]
+        {
+            decipherValue = (((int) cipher[i] - 65) - ((int) toupper(key[i % len]) - 65) + 26) % 26 + 65;
+            de = (char) decipherValue;
+        }
+
+        //Print the ciphered character if it is alphanumeric (a letter)
+        if (isalpha(cipher[i])) {
+            printf("%c", de);
+        } else //if the character is not a letter then print the character (e.g. space)
+        {
+            printf("%c", cipher[i]);
+        }
+    }
+
+    printf("\n");
+
 }
