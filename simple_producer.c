@@ -1,9 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <malloc.h>
+#include "simple_producer.h"
 
-void One_Time_Pad(char *plaintext, char *secret_key) {
-    char crypto[strlen(plaintext)];
+
+char *one_time_pad_encryption(char *plaintext, char *secret_key) {
+    static char *crypto;
+    crypto = malloc(strlen(plaintext) * sizeof(char));
     int i;
     for (i = 0; i < strlen(plaintext); i++) {
         crypto[i] = plaintext[i] ^ secret_key[i];
@@ -21,10 +25,100 @@ void One_Time_Pad(char *plaintext, char *secret_key) {
         }
     }
     printf("\n");
-    for (i = 0; i < strlen(plaintext); i++){
-        plaintext[i] = crypto[i] ^ secret_key[i];
-    }
-    plaintext[i] = '\0';
-    printf("[OTP] decrypted: %s", plaintext);
+    return crypto;
 
+}
+
+char *one_time_pad_decryption(char *crypto, char *secret_key) {
+    int i;
+    static char *decrypted_message;
+    decrypted_message = malloc(strlen(crypto) * sizeof(char));
+    for (i = 0; i < strlen(crypto); i++) {
+        decrypted_message[i] = crypto[i] ^ secret_key[i];
+    }
+    decrypted_message[i] = '\0';
+    printf("[OTP] decrypted: %s", decrypted_message);
+    scanf("%*c");
+    return decrypted_message;
+}
+
+char *ceasar_cipher_encryption(char *plainText, int key) {
+    //Print the ciphered text
+    int i;
+//    char cipher[strlen(plainText)];
+
+    static char *cipher;
+    cipher = malloc(strlen(plainText) * sizeof(char));
+    //Encryption
+    printf("[Ceasars] encrypted: ");
+    plainText[strlen(plainText)] = '\0';
+
+    for (i = 0; i < strlen(plainText); i++) {
+        // printf("%d\n",(int)plainText[i] );
+        //if the character is lowercase, where range is [97 -122]
+        if (isalpha(plainText[i]) != 0) {
+            if (islower(plainText[i]) != 0) {
+                int lower_alpha_pos;
+                // printf("Inside Lower\n");
+                // printf("\n2 %d\n",( (int)plainText[i]- 48 ) );
+                lower_alpha_pos = (int) plainText[i] - 61;
+                cipher[i] = (char) AlphabetWithDigits[(lower_alpha_pos + key) % 62][0];
+            } else if (isupper(plainText[i]) != 0) {
+                int upper_alpha_pos;
+                // printf("ALpha inside %c\n",AlphabetWithDigits[10][0] );
+                upper_alpha_pos = (int) plainText[i] - 55;
+                cipher[i] = (char) AlphabetWithDigits[(upper_alpha_pos + key) % 62][0];
+            }
+            // printf("\n1 %d\n",( (int)plainText[i] ));
+        } else if (isdigit(plainText[i]) != 0) {
+            int digit_pos;
+            // printf("\n2 %d\n",( (int)plainText[i]- 48 ) );
+            digit_pos = (int) plainText[i] - 48;
+            // printf("HAH %d\n",( digit_pos + key) % 62 );
+
+            // printf("ALpha inside %c\n",AlphabetWithDigits[7][0] );
+            cipher[i] = (char) AlphabetWithDigits[(digit_pos + key) % 62][0];
+        }
+        printf("%c", cipher[i]);
+
+
+    }
+    printf("\n");
+    return cipher;
+
+}
+
+
+char *ceasar_cipher_decryption(char *plainText, int key) {
+    //Decryption
+    static char *cipher;
+    cipher = malloc(strlen(plainText) * sizeof(char));
+    printf("[Ceasars] decrypted: ");
+    for (int i = 0; i < strlen(plainText); i++) {
+        if (isalpha(plainText[i]) != 0) {
+            if (islower(plainText[i]) != 0) {
+                int lower_alpha_pos;
+                // printf("Inside Lower\n");
+                // printf("\n2 %d\n",( (int)plainText[i]- 48 ) );
+                lower_alpha_pos = (int) plainText[i] - 61;
+                cipher[i] = (char) AlphabetWithDigits[(lower_alpha_pos - key) % 62][0];
+            } else if (isupper(plainText[i]) != 0) {
+                int upper_alpha_pos;
+                // printf("ALpha inside %c\n",AlphabetWithDigits[10][0] );
+                upper_alpha_pos = (int) plainText[i] - 55;
+                cipher[i] = (char) AlphabetWithDigits[(upper_alpha_pos - key) % 62][0];
+            }
+            // printf("\n1 %d\n",( (int)plainText[i] ));
+        } else if (isdigit(plainText[i]) != 0) {
+            int digit_pos;
+            // printf("\n2 %d\n",( (int)plainText[i]- 48 ) );
+            digit_pos = (int) plainText[i] - 48;
+            // printf("HAH %d\n",( digit_pos + key) % 62 );
+
+            // printf("ALpha inside %c\n",AlphabetWithDigits[7][0] );
+            cipher[i] = (char) AlphabetWithDigits[(digit_pos - key) % 62][0];
+        }
+        printf("%c", cipher[i]);
+    }
+    return cipher;
 }
