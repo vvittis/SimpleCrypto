@@ -2,7 +2,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <malloc.h>
-#include "simple_producer.h"
+#include "simple_crypto.h"
 
 
 char *one_time_pad_encryption(char *plaintext, const char *secret_key) {
@@ -44,10 +44,7 @@ char *one_time_pad_decryption(char *crypto, const char *secret_key) {
 }
 
 char *ceasar_cipher_encryption(char *plainText, int key) {
-    //Print the ciphered text
     int i;
-//    char cipher[strlen(plainText)];
-
     static char *cipher;
     cipher = malloc(strlen(plainText) * sizeof(char));
     //Encryption
@@ -130,7 +127,6 @@ void generateKey(char *str, char *key) {
     int y = strlen(key);
 
     int j = 0;
-    char value[strlen(str)];
     for (int i = 0; i < x; i++) {
 
         if (i >= y) {
@@ -155,8 +151,6 @@ char * vigenere_cipher_encryption(char *plainText, char *key){
 
     int i;
     generateKey(plainText, key);
-//    printf("[Vigenere] key1: %s\n", key);
-    //print the encrypted plain text
     printf("[Vigenere] encrypted: ");
     static char *cipher;
     cipher = malloc(strlen(plainText) * sizeof(char));
@@ -182,31 +176,31 @@ char * vigenere_cipher_decryption(char *crypto, char *key){
     int len = strlen(key);
     int i;
     printf("[Vigenere] decrypted: ");
-    char de;
+    static char *cipher;
+    cipher = malloc(strlen(crypto) * sizeof(char));
     int decipherValue;
-    crypto[i] = '\0';
+
     //Loop through the length of the plain text string
     for (i = 0; i < strlen(crypto); i++) {
         //if the character is lowercase, where range is [97 -122]
         if (islower(crypto[i])) {
             decipherValue = (((int) crypto[i] - 97) - ((int) tolower(key[i % len]) - 97) + 26) % 26 + 97;
-            de = (char) decipherValue;
+            cipher[i] = (char) decipherValue;
 
         } else // Else it's upper case, where letter range is [65 - 90]
         {
             decipherValue = (((int) crypto[i] - 65) - ((int) toupper(key[i % len]) - 65) + 26) % 26 + 65;
-            de = (char) decipherValue;
+              cipher[i] = (char) decipherValue;
         }
 
         //Print the ciphered character if it is alphanumeric (a letter)
         if (isalpha(crypto[i])) {
-            printf("%c", de);
+            printf("%c",   cipher[i]);
         } else //if the character is not a letter then print the character (e.g. space)
         {
             printf("%c", crypto[i]);
         }
     }
-
-    printf("\n");
+    return cipher;
 
 }
