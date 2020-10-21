@@ -7,12 +7,12 @@
  *               INPUT:     input_plaintext, input_secret_key
  *               OUTPUT:    encrypted_message
  *            2. NAME:      one_time_pad_decryption
- *               INPUT:     encrypted_message,input_secret_key
+ *               INPUT:     encrypted_message,input_secret_key,size_of_plaintext
  *               OUTPUT     decrypted_message
  */
 char *one_time_pad_encryption(char *plaintext, const char *secret_key);
 
-char *one_time_pad_decryption(char *encrypted_message, const char *secret_key);
+char *one_time_pad_decryption(char *encrypted_message, const char *secret_key, int size_of_plaintext);
 
 /**
  * INFO: Caesar's Cipher (It reads an input plaintext and a positive key)
