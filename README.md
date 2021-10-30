@@ -1,5 +1,5 @@
 # SimpleCrypto
-
+ 
 This projects implements 3 crypto algorithms
 
 1. One-time Pad
